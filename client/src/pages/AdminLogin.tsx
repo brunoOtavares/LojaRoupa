@@ -26,7 +26,7 @@ export default function AdminLogin() {
         title: "Login realizado com sucesso",
         description: "Bem-vindo ao painel administrativo",
       });
-      setLocation("/admin/produtos");
+      setLocation("/admin/kits");
     } catch (error: any) {
       console.error("Login error:", error);
       let errorMessage = "Não foi possível fazer login. Tente novamente.";

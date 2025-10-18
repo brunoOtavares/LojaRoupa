@@ -13,8 +13,8 @@ export function ProductGrid({ items, isLoading }: ProductGridProps) {
 
   const filteredItems = items.filter(item => {
     if (filter === "all") return true;
-    if (filter === "kit") return 'imageUrls' in item;
-    return !('imageUrls' in item);
+    if (filter === "kit") return 'productIds' in item;
+    return !('productIds' in item);
   });
 
   if (isLoading) {

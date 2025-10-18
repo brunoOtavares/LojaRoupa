@@ -17,13 +17,14 @@ export const insertProductSchema = productSchema.omit({ id: true, createdAt: tru
 export type Product = z.infer<typeof productSchema>;
 export type InsertProduct = z.infer<typeof insertProductSchema>;
 
-// Kit Schema (conjunto com múltiplas imagens)
+// Kit Schema (conjunto de produtos com foto do kit montado)
 export const kitSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Nome é obrigatório"),
   description: z.string().min(1, "Descrição é obrigatória"),
   price: z.coerce.number().min(0, "Preço deve ser maior ou igual a zero"),
-  imageUrls: z.array(z.string().url()).min(1, "Pelo menos uma imagem é necessária"),
+  imageUrl: z.string().url("URL de imagem inválida"),
+  productIds: z.array(z.string()).min(1, "Selecione pelo menos um produto"),
   isFeatured: z.boolean().default(false),
   createdAt: z.number(),
 });

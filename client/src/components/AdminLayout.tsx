@@ -98,22 +98,22 @@ export function AdminLayout({ children }: AdminLayoutProps) {
         <div className="max-w-7xl mx-auto px-4 md:px-8">
           <div className="flex gap-1 overflow-x-auto">
             <Button
-              variant={location === "/admin" ? "default" : "ghost"}
-              onClick={() => setLocation("/admin")}
-              className="gap-2 flex-shrink-0"
-              data-testid="button-nav-products"
-            >
-              <Package className="w-4 h-4" />
-              Produtos
-            </Button>
-            <Button
-              variant={location === "/admin/kits" ? "default" : "ghost"}
+              variant={location === "/admin/kits" || location === "/admin" ? "default" : "ghost"}
               onClick={() => setLocation("/admin/kits")}
               className="gap-2 flex-shrink-0"
               data-testid="button-nav-kits"
             >
               <Grid3x3 className="w-4 h-4" />
               Kits
+            </Button>
+            <Button
+              variant={location === "/admin/produtos" ? "default" : "ghost"}
+              onClick={() => setLocation("/admin/produtos")}
+              className="gap-2 flex-shrink-0"
+              data-testid="button-nav-products"
+            >
+              <Package className="w-4 h-4" />
+              Produtos
             </Button>
           </div>
         </div>

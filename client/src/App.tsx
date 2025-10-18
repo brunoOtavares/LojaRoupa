@@ -18,8 +18,9 @@ function Router() {
       <Route path="/destaques" component={Featured} />
       <Route path="/contato" component={Contact} />
       <Route path="/admin/login" component={AdminLogin} />
-      <Route path="/admin" component={AdminProducts} />
+      <Route path="/admin" component={AdminKits} />
       <Route path="/admin/kits" component={AdminKits} />
+      <Route path="/admin/produtos" component={AdminProducts} />
       <Route component={NotFound} />
     </Switch>
   );
