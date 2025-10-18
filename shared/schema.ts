@@ -13,7 +13,10 @@ export const productSchema = z.object({
 });
 
 export const insertProductSchema = productSchema.omit({ id: true, createdAt: true }).extend({
-  imageUrl: z.string().min(1, "Imagem do produto é obrigatória"),
+  imageUrl: z.string().min(1, "Imagem do produto é obrigatória").refine(
+    (val) => val === "pending-upload" || val.startsWith("http"),
+    { message: "Imagem do produto é obrigatória" }
+  ),
 });
 
 export type Product = z.infer<typeof productSchema>;
