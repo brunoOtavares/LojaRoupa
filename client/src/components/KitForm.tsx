@@ -68,6 +68,8 @@ export function KitForm({ kit, onSubmit, onCancel, isPending }: KitFormProps) {
     const file = e.target.files?.[0];
     if (file) {
       setImageFile(file);
+      // Marca como "pending upload" para passar na validação
+      form.setValue("imageUrl", "pending-upload", { shouldValidate: true });
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
