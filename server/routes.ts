@@ -7,9 +7,21 @@ import { insertProductSchema, insertKitSchema, type Product, type Kit } from "@s
 
 // Initialize Firebase Admin (server-side)
 if (getApps().length === 0) {
-  initializeApp({
-    projectId: "michel-multimarcas",
-  });
+  const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+  
+  if (serviceAccountKey) {
+    // Use service account credentials
+    const serviceAccount = JSON.parse(serviceAccountKey);
+    initializeApp({
+      credential: cert(serviceAccount),
+      projectId: "michel-multimarcas",
+    });
+  } else {
+    // Fallback to minimal config
+    initializeApp({
+      projectId: "michel-multimarcas",
+    });
+  }
 }
 
 const db = getFirestore();
