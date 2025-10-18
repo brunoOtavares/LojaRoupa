@@ -6,7 +6,10 @@ export const productSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
   description: z.string().min(1, "Descrição é obrigatória"),
   price: z.coerce.number().min(0, "Preço deve ser maior ou igual a zero"),
-  imageUrl: z.string().url("URL de imagem inválida"),
+  imageUrl: z.string().refine(
+    (val) => val.startsWith("http") || val.startsWith("/objects/"),
+    { message: "URL de imagem inválida" }
+  ),
   type: z.enum(["individual", "kit"]).default("individual"),
   isFeatured: z.boolean().default(false),
   createdAt: z.number(),
@@ -14,7 +17,7 @@ export const productSchema = z.object({
 
 export const insertProductSchema = productSchema.omit({ id: true, createdAt: true }).extend({
   imageUrl: z.string().min(1, "Imagem do produto é obrigatória").refine(
-    (val) => val === "pending-upload" || val.startsWith("http"),
+    (val) => val === "pending-upload" || val.startsWith("http") || val.startsWith("/objects/"),
     { message: "Imagem do produto é obrigatória" }
   ),
 });
@@ -28,7 +31,10 @@ export const kitSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
   description: z.string().min(1, "Descrição é obrigatória"),
   price: z.coerce.number().min(0, "Preço deve ser maior ou igual a zero"),
-  imageUrl: z.string().url("URL de imagem inválida"),
+  imageUrl: z.string().refine(
+    (val) => val.startsWith("http") || val.startsWith("/objects/"),
+    { message: "URL de imagem inválida" }
+  ),
   productIds: z.array(z.string()).min(1, "Selecione pelo menos um produto"),
   isFeatured: z.boolean().default(false),
   createdAt: z.number(),

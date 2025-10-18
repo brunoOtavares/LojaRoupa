@@ -4,6 +4,7 @@ import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { getAuth } from "firebase-admin/auth";
 import { insertProductSchema, insertKitSchema, type Product, type Kit } from "@shared/schema";
+import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
 
 // Initialize Firebase Admin (server-side)
 if (getApps().length === 0) {
@@ -155,6 +156,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error deleting kit:", error);
       res.status(500).json({ error: "Failed to delete kit" });
+    }
+  });
+
+  // Object Storage Routes
+  // Get presigned upload URL (protected - requires authentication)
+  app.post("/api/upload", verifyAuth, async (req, res) => {
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const uploadURL = await objectStorageService.getUploadURL();
+      res.json({ uploadURL });
+    } catch (error) {
+      console.error("Error getting upload URL:", error);
+      res.status(500).json({ error: "Failed to get upload URL" });
+    }
+  });
+
+  // Serve uploaded images (public - no authentication required)
+  app.get("/objects/:objectPath(*)", async (req, res) => {
+    try {
+      const objectStorageService = new ObjectStorageService();
+      const objectFile = await objectStorageService.getObjectFile(req.path);
+      await objectStorageService.downloadObject(objectFile, res);
+    } catch (error) {
+      if (error instanceof ObjectNotFoundError) {
+        return res.status(404).json({ error: "File not found" });
+      }
+      console.error("Error serving object:", error);
+      res.status(500).json({ error: "Internal server error" });
     }
   });
 

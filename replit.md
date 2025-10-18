@@ -5,7 +5,7 @@ Site completo de vitrine de loja de roupas com design moderno e minimalista. Per
 
 ## Tech Stack
 - **Frontend**: React, TypeScript, TailwindCSS, Shadcn UI, Framer Motion
-- **Backend**: Express.js, Firebase (Firestore, Storage, Authentication)
+- **Backend**: Express.js, Firebase (Firestore, Authentication), Replit Object Storage
 - **Routing**: Wouter
 - **State Management**: TanStack Query
 
@@ -22,11 +22,11 @@ Site completo de vitrine de loja de roupas com design moderno e minimalista. Per
 - Design totalmente responsivo
 
 ### Painel Administrativo
-- Login com Google (Firebase Auth)
+- Login com Email/Senha (Firebase Auth)
 - Gerenciamento de produtos individuais (CRUD completo)
 - Gerenciamento de kits/conjuntos (CRUD completo)
-- Upload de imagens para Firebase Storage
-- Múltiplas imagens para kits
+- Upload de imagens para Replit Object Storage
+- Foto única do kit montado + seleção de produtos
 - Marcar produtos/kits como destaque
 - Interface intuitiva com preview de imagens
 
@@ -56,7 +56,8 @@ client/
       - queryClient.ts (configuração TanStack Query)
 
 server/
-  - routes.ts (API endpoints com Firebase Admin)
+  - routes.ts (API endpoints com Firebase Admin + Object Storage)
+  - objectStorage.ts (Serviço Replit Object Storage)
 
 shared/
   - schema.ts (schemas Zod e tipos TypeScript)
@@ -90,6 +91,9 @@ shared/
 - VITE_FIREBASE_API_KEY=AIzaSyBnEdEiyfvlHUnYsU3PcSWjuwgvznlobPU
 - FIREBASE_SERVICE_ACCOUNT_KEY (JSON completo com credenciais admin)
 - SESSION_SECRET (gerado automaticamente)
+- DEFAULT_OBJECT_STORAGE_BUCKET_ID (bucket Replit Object Storage)
+- PUBLIC_OBJECT_SEARCH_PATHS (caminhos públicos para assets)
+- PRIVATE_OBJECT_DIR (diretório privado para uploads)
 
 ## WhatsApp Integration
 Ao clicar em "Ver no WhatsApp", o usuário é redirecionado com mensagem pré-formatada:
