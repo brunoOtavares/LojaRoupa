@@ -102,33 +102,31 @@ export function KitForm({ kit, onSubmit, onCancel, isPending }: KitFormProps) {
     if (imageFile) {
       setUploading(true);
       try {
-        // Get presigned upload URL from backend
-        const { uploadURL } = await apiRequest("POST", "/api/upload", {}) as unknown as { uploadURL: string };
+        // Create FormData to send file to server
+        const formData = new FormData();
+        formData.append("file", imageFile);
 
-        // Upload file directly to Replit Object Storage
-        const uploadResponse = await fetch(uploadURL, {
-          method: "PUT",
-          body: imageFile,
+        // Upload via server (avoids CORS issues)
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
           headers: {
-            "Content-Type": imageFile.type,
+            "Authorization": `Bearer ${await (await import("@/lib/firebase")).auth.currentUser?.getIdToken()}`,
           },
         });
 
-        if (!uploadResponse.ok) {
-          const errorText = await uploadResponse.text();
-          throw new Error(`Upload failed: ${uploadResponse.status} ${errorText}`);
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Upload failed");
         }
 
-        // Extract object path from upload URL and convert to /objects/ path
-        const url = new URL(uploadURL);
-        const pathParts = url.pathname.split("/");
-        const objectId = pathParts[pathParts.length - 1];
-        imageUrl = `/objects/uploads/${objectId}`;
+        const uploadResult = await response.json();
+        imageUrl = uploadResult.imageUrl;
       } catch (error) {
         console.error("Upload error:", error);
         toast({
           title: "Erro no upload",
-          description: "Não foi possível fazer upload da imagem",
+          description: error instanceof Error ? error.message : "Não foi possível fazer upload da imagem",
           variant: "destructive",
         });
         setUploading(false);
