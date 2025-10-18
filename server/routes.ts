@@ -6,9 +6,10 @@ import { getAuth } from "firebase-admin/auth";
 import { insertProductSchema, insertKitSchema, type Product, type Kit } from "@shared/schema";
 
 // Initialize Firebase Admin (server-side)
-// Firebase Admin SDK will automatically use Application Default Credentials in Replit
 if (getApps().length === 0) {
-  initializeApp();
+  initializeApp({
+    projectId: "michel-multimarcas",
+  });
 }
 
 const db = getFirestore();
