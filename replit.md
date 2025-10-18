@@ -83,10 +83,12 @@ shared/
 - isFeatured: boolean
 - createdAt: number
 
-## Environment Variables
-- VITE_FIREBASE_PROJECT_ID
-- VITE_FIREBASE_APP_ID
-- VITE_FIREBASE_API_KEY
+## Environment Variables (Secrets)
+- VITE_FIREBASE_PROJECT_ID=michel-multimarcas
+- VITE_FIREBASE_APP_ID=1:918302799335:web:0c3c9361afe367a9583942
+- VITE_FIREBASE_API_KEY=AIzaSyBnEdEiyfvlHUnYsU3PcSWjuwgvznlobPU
+- FIREBASE_SERVICE_ACCOUNT_KEY (JSON completo com credenciais admin)
+- SESSION_SECRET (gerado automaticamente)
 
 ## WhatsApp Integration
 Ao clicar em "Ver no WhatsApp", o usuário é redirecionado com mensagem pré-formatada:
@@ -110,9 +112,13 @@ Seguindo design_guidelines.md:
 - Responsive design mobile-first
 
 ## Recent Changes
-- 2025-01-18: Implementação completa do MVP
-  - Frontend com todos os componentes
-  - Backend Firebase com CRUD completo
-  - Sistema de upload de imagens
-  - Autenticação com Google
-  - Integração WhatsApp
+- 2025-01-18: Implementação e configuração completa do MVP
+  - Frontend com todos os componentes (Header, Hero, ProductGrid, etc)
+  - Backend Firebase Admin SDK com Service Account
+  - APIs protegidas com autenticação Firebase
+  - Sistema de upload de imagens para Firebase Storage
+  - Autenticação com Google Sign-In
+  - Integração WhatsApp com mensagens automáticas
+  - Validação de formulários com Zod (z.coerce.number para preços)
+  - Domínio Replit autorizado no Firebase Console
+  - Testes E2E passando com sucesso
