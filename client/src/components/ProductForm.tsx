@@ -83,11 +83,15 @@ export function ProductForm({ product, onSubmit, onCancel, isPending }: ProductF
   };
 
   const handleSubmit = async (data: InsertProduct) => {
+    console.log("📝 handleSubmit chamado com data:", data);
+    console.log("🖼️ imageFile:", imageFile);
+    console.log("🔍 Erros do formulário:", form.formState.errors);
     try {
       const imageUrl = await uploadImage();
+      console.log("✅ Upload concluído, URL:", imageUrl);
       onSubmit({ ...data, imageUrl });
     } catch (error) {
-      // Error already handled in uploadImage
+      console.error("❌ Erro no submit:", error);
     }
   };
 
@@ -222,6 +226,7 @@ export function ProductForm({ product, onSubmit, onCancel, isPending }: ProductF
             disabled={isPending || uploading}
             className="flex-1"
             data-testid="button-submit-product"
+            onClick={() => console.log("🔘 Botão Criar Produto clicado!")}
           >
             {uploading ? "Fazendo upload..." : isPending ? "Salvando..." : product ? "Atualizar" : "Criar Produto"}
           </Button>
