@@ -13,7 +13,10 @@ export const productSchema = z.object({
 });
 
 export const insertProductSchema = productSchema.omit({ id: true, createdAt: true }).extend({
-  imageUrl: z.string().min(1, "Imagem do produto é obrigatória").url("Imagem do produto deve ser uma URL válida"),
+  imageUrl: z.string().min(1, "Imagem do produto é obrigatória").refine(
+    (val) => val === "pending-upload" || val.startsWith("http"),
+    { message: "Por favor, selecione uma imagem do produto" }
+  ),
 });
 
 export type Product = z.infer<typeof productSchema>;
@@ -32,7 +35,10 @@ export const kitSchema = z.object({
 });
 
 export const insertKitSchema = kitSchema.omit({ id: true, createdAt: true }).extend({
-  imageUrl: z.string().min(1, "Imagem do kit é obrigatória").url("Imagem do kit deve ser uma URL válida"),
+  imageUrl: z.string().min(1, "Imagem do kit é obrigatória").refine(
+    (val) => val === "pending-upload" || val.startsWith("http"),
+    { message: "Por favor, selecione uma imagem do kit" }
+  ),
 });
 
 export type Kit = z.infer<typeof kitSchema>;
