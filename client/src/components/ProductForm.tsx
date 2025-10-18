@@ -76,10 +76,21 @@ export function ProductForm({ product, onSubmit, onCancel, isPending }: ProductF
     setUploading(true);
     try {
       // Get presigned upload URL from backend
-      const response = await apiRequest("POST", "/api/upload", {});
-      console.log("Upload response:", response);
-      const uploadURL = (response as any)?.uploadURL;
-      console.log("Upload URL:", uploadURL);
+      const token = await (await import("@/lib/firebase")).auth.currentUser?.getIdToken();
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({}),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to get upload URL");
+      }
+
+      const { uploadURL } = await response.json();
 
       if (!uploadURL) {
         throw new Error("No upload URL received from server");
