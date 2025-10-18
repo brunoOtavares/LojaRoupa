@@ -105,7 +105,25 @@ export function KitForm({ kit, onSubmit, onCancel, isPending }: KitFormProps) {
       setUploading(true);
       try {
         // Get presigned upload URL from backend
-        const { uploadURL } = await apiRequest("POST", "/api/upload", {}) as unknown as { uploadURL: string };
+        const token = await (await import("@/lib/firebase")).auth.currentUser?.getIdToken();
+        const response = await fetch("/api/upload", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+          body: JSON.stringify({}),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to get upload URL");
+        }
+
+        const { uploadURL } = await response.json();
+
+        if (!uploadURL) {
+          throw new Error("No upload URL received from server");
+        }
 
         // Upload file directly to Replit Object Storage
         const uploadResponse = await fetch(uploadURL, {
