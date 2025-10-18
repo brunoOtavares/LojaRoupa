@@ -6,20 +6,14 @@ export const productSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
   description: z.string().min(1, "Descrição é obrigatória"),
   price: z.coerce.number().min(0, "Preço deve ser maior ou igual a zero"),
-  imageUrl: z.string().refine(
-    (val) => val.startsWith("http") || val.startsWith("/objects/"),
-    { message: "URL de imagem inválida" }
-  ),
+  imageUrl: z.string().url("URL de imagem inválida"),
   type: z.enum(["individual", "kit"]).default("individual"),
   isFeatured: z.boolean().default(false),
   createdAt: z.number(),
 });
 
 export const insertProductSchema = productSchema.omit({ id: true, createdAt: true }).extend({
-  imageUrl: z.string().min(1, "Imagem do produto é obrigatória").refine(
-    (val) => val === "pending-upload" || val.startsWith("http") || val.startsWith("/objects/"),
-    { message: "Imagem do produto é obrigatória" }
-  ),
+  imageUrl: z.string().min(1, "Imagem do produto é obrigatória").url("Imagem do produto deve ser uma URL válida"),
 });
 
 export type Product = z.infer<typeof productSchema>;
@@ -31,16 +25,15 @@ export const kitSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
   description: z.string().min(1, "Descrição é obrigatória"),
   price: z.coerce.number().min(0, "Preço deve ser maior ou igual a zero"),
-  imageUrl: z.string().refine(
-    (val) => val.startsWith("http") || val.startsWith("/objects/"),
-    { message: "URL de imagem inválida" }
-  ),
+  imageUrl: z.string().url("URL de imagem inválida"),
   productIds: z.array(z.string()).min(1, "Selecione pelo menos um produto"),
   isFeatured: z.boolean().default(false),
   createdAt: z.number(),
 });
 
-export const insertKitSchema = kitSchema.omit({ id: true, createdAt: true });
+export const insertKitSchema = kitSchema.omit({ id: true, createdAt: true }).extend({
+  imageUrl: z.string().min(1, "Imagem do kit é obrigatória").url("Imagem do kit deve ser uma URL válida"),
+});
 
 export type Kit = z.infer<typeof kitSchema>;
 export type InsertKit = z.infer<typeof insertKitSchema>;

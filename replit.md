@@ -117,11 +117,18 @@ Seguindo design_guidelines.md:
 - Responsive design mobile-first
 
 ## Recent Changes
+- 2025-10-18: Upload de imagens migrado para Firebase Storage (server-side)
+  - Implementado POST /api/upload com multer para receber arquivos
+  - Upload server-side para Firebase Storage evita problemas de CORS
+  - Limite de upload: 50MB por arquivo
+  - URLs de imagem agora são do Firebase Storage (https://storage.googleapis.com)
+  - Schemas atualizados para validar URLs completas (.url())
+  - Removidas referências ao Replit Object Storage
+  
 - 2025-01-18: Implementação e configuração completa do MVP
   - Frontend com todos os componentes (Header, Hero, ProductGrid, etc)
   - Backend Firebase Admin SDK com Service Account
   - APIs protegidas com autenticação Firebase
-  - Sistema de upload de imagens para Firebase Storage
   - Autenticação alterada de Google para Email/Senha
   - Sistema de Kits reformulado para selecionar produtos individuais
   - Kits agora têm uma foto do conjunto montado + produtos selecionados
@@ -129,4 +136,3 @@ Seguindo design_guidelines.md:
   - Validação de formulários com Zod (z.coerce.number para preços)
   - Domínio Replit autorizado no Firebase Console
   - Redirecionamento após login para aba Kits
-  - Testes E2E passando com sucesso

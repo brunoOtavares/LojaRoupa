@@ -3,8 +3,10 @@ import { createServer, type Server } from "http";
 import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
 import { getAuth } from "firebase-admin/auth";
+import { getStorage } from "firebase-admin/storage";
 import { insertProductSchema, insertKitSchema, type Product, type Kit } from "@shared/schema";
-import { ObjectStorageService, ObjectNotFoundError } from "./objectStorage";
+import multer from "multer";
+import { randomUUID } from "crypto";
 
 // Initialize Firebase Admin (server-side)
 if (getApps().length === 0) {
@@ -16,17 +18,26 @@ if (getApps().length === 0) {
     initializeApp({
       credential: cert(serviceAccount),
       projectId: "michel-multimarcas",
+      storageBucket: "michel-multimarcas.appspot.com",
     });
   } else {
     // Fallback to minimal config
     initializeApp({
       projectId: "michel-multimarcas",
+      storageBucket: "michel-multimarcas.appspot.com",
     });
   }
 }
 
 const db = getFirestore();
 const adminAuth = getAuth();
+const storage = getStorage().bucket();
+
+// Configure multer for file uploads (memory storage)
+const upload = multer({ 
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 50 * 1024 * 1024 } // 50MB limit
+});
 
 // Middleware to verify Firebase ID token
 async function verifyAuth(req: any, res: any, next: any) {
@@ -159,31 +170,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Object Storage Routes
-  // Get presigned upload URL (protected - requires authentication)
-  app.post("/api/upload", verifyAuth, async (req, res) => {
+  // Firebase Storage Upload Route (server-side upload to avoid CORS)
+  app.post("/api/upload", verifyAuth, upload.single("file"), async (req, res) => {
     try {
-      const objectStorageService = new ObjectStorageService();
-      const uploadURL = await objectStorageService.getUploadURL();
-      res.json({ uploadURL });
-    } catch (error) {
-      console.error("Error getting upload URL:", error);
-      res.status(500).json({ error: "Failed to get upload URL" });
-    }
-  });
-
-  // Serve uploaded images (public - no authentication required)
-  app.get("/objects/:objectPath(*)", async (req, res) => {
-    try {
-      const objectStorageService = new ObjectStorageService();
-      const objectFile = await objectStorageService.getObjectFile(req.path);
-      await objectStorageService.downloadObject(objectFile, res);
-    } catch (error) {
-      if (error instanceof ObjectNotFoundError) {
-        return res.status(404).json({ error: "File not found" });
+      if (!req.file) {
+        return res.status(400).json({ error: "No file uploaded" });
       }
-      console.error("Error serving object:", error);
-      res.status(500).json({ error: "Internal server error" });
+
+      const file = req.file;
+      const fileName = `uploads/${randomUUID()}_${file.originalname}`;
+      const fileRef = storage.file(fileName);
+
+      // Upload file to Firebase Storage
+      await fileRef.save(file.buffer, {
+        metadata: {
+          contentType: file.mimetype,
+        },
+      });
+
+      // Make file public
+      await fileRef.makePublic();
+
+      // Get public URL
+      const publicUrl = `https://storage.googleapis.com/${storage.name}/${fileName}`;
+
+      res.json({ imageUrl: publicUrl });
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      res.status(500).json({ error: "Failed to upload file" });
     }
   });
 
