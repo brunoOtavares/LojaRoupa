@@ -8,10 +8,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Upload, X } from "lucide-react";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
 import { useQuery } from "@tanstack/react-query";
+import { apiRequest } from "@/lib/queryClient";
 import {
   Form,
   FormControl,
@@ -103,9 +102,28 @@ export function KitForm({ kit, onSubmit, onCancel, isPending }: KitFormProps) {
     if (imageFile) {
       setUploading(true);
       try {
-        const storageRef = ref(storage, `kits/${Date.now()}_${imageFile.name}`);
-        await uploadBytes(storageRef, imageFile);
-        imageUrl = await getDownloadURL(storageRef);
+        // Get presigned upload URL from backend
+        const { uploadURL } = await apiRequest("POST", "/api/upload", {}) as unknown as { uploadURL: string };
+
+        // Upload file directly to Replit Object Storage
+        const uploadResponse = await fetch(uploadURL, {
+          method: "PUT",
+          body: imageFile,
+          headers: {
+            "Content-Type": imageFile.type,
+          },
+        });
+
+        if (!uploadResponse.ok) {
+          const errorText = await uploadResponse.text();
+          throw new Error(`Upload failed: ${uploadResponse.status} ${errorText}`);
+        }
+
+        // Extract object path from upload URL and convert to /objects/ path
+        const url = new URL(uploadURL);
+        const pathParts = url.pathname.split("/");
+        const objectId = pathParts[pathParts.length - 1];
+        imageUrl = `/objects/uploads/${objectId}`;
       } catch (error) {
         console.error("Upload error:", error);
         toast({

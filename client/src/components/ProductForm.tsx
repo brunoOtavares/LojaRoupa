@@ -8,9 +8,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Switch } from "@/components/ui/switch";
 import { useState } from "react";
 import { Upload, X } from "lucide-react";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
 
 interface ProductFormProps {
   product?: Product;
@@ -62,7 +61,7 @@ export function ProductForm({ product, onSubmit, onCancel, isPending }: ProductF
     if (!imageFile) {
       const currentUrl = form.getValues("imageUrl");
       // Se não há arquivo novo e a URL atual é válida (edição), retorna
-      if (currentUrl && currentUrl.startsWith("http")) {
+      if (currentUrl && (currentUrl.startsWith("http") || currentUrl.startsWith("/objects/"))) {
         return currentUrl;
       }
       // Se chegou aqui sem arquivo, erro
@@ -76,12 +75,30 @@ export function ProductForm({ product, onSubmit, onCancel, isPending }: ProductF
 
     setUploading(true);
     try {
-      const timestamp = Date.now();
-      const fileName = `products/${timestamp}_${imageFile.name}`;
-      const storageRef = ref(storage, fileName);
-      await uploadBytes(storageRef, imageFile);
-      const url = await getDownloadURL(storageRef);
-      return url;
+      // Get presigned upload URL from backend
+      const { uploadURL } = await apiRequest("POST", "/api/upload", {}) as unknown as { uploadURL: string };
+
+      // Upload file directly to Replit Object Storage
+      const uploadResponse = await fetch(uploadURL, {
+        method: "PUT",
+        body: imageFile,
+        headers: {
+          "Content-Type": imageFile.type,
+        },
+      });
+
+      if (!uploadResponse.ok) {
+        const errorText = await uploadResponse.text();
+        throw new Error(`Upload failed: ${uploadResponse.status} ${errorText}`);
+      }
+
+      // Extract object path from upload URL and convert to /objects/ path
+      const url = new URL(uploadURL);
+      const pathParts = url.pathname.split("/");
+      const objectId = pathParts[pathParts.length - 1];
+      const objectPath = `/objects/uploads/${objectId}`;
+
+      return objectPath;
     } catch (error) {
       console.error("Upload error:", error);
       toast({
