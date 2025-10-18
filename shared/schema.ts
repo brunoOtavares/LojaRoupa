@@ -13,7 +13,7 @@ export const productSchema = z.object({
 });
 
 export const insertProductSchema = productSchema.omit({ id: true, createdAt: true }).extend({
-  imageUrl: z.union([z.string().url("URL de imagem inválida"), z.literal("")]),
+  imageUrl: z.string().min(1, "Imagem do produto é obrigatória"),
 });
 
 export type Product = z.infer<typeof productSchema>;
