@@ -114,7 +114,10 @@ export default function AdminProducts() {
           </div>
           {!showForm && (
             <Button
-              onClick={() => setShowForm(true)}
+              onClick={() => {
+                console.log("Botão Novo Produto clicado!");
+                setShowForm(true);
+              }}
               className="gap-2"
               data-testid="button-add-product"
             >
