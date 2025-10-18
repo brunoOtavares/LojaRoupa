@@ -167,16 +167,11 @@ export default function AdminKits() {
             {kits.map(kit => (
               <Card key={kit.id} className="overflow-hidden">
                 <div className="relative aspect-[3/4] bg-muted">
-                  <div className="grid grid-cols-2 gap-0.5 h-full">
-                    {kit.imageUrls.slice(0, 4).map((url, idx) => (
-                      <img
-                        key={idx}
-                        src={url}
-                        alt={`${kit.name} - ${idx + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    ))}
-                  </div>
+                  <img
+                    src={kit.imageUrl}
+                    alt={kit.name}
+                    className="w-full h-full object-cover"
+                  />
                   {kit.isFeatured && (
                     <div className="absolute top-2 right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded">
                       Destaque
@@ -195,7 +190,7 @@ export default function AdminKits() {
                       R$ {kit.price.toFixed(2)}
                     </p>
                     <p className="text-xs text-muted-foreground">
-                      {kit.imageUrls.length} {kit.imageUrls.length === 1 ? 'imagem' : 'imagens'}
+                      {kit.productIds.length} {kit.productIds.length === 1 ? 'produto' : 'produtos'}
                     </p>
                   </div>
                   <div className="flex gap-2">

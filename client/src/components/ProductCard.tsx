@@ -12,8 +12,8 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ item, index = 0 }: ProductCardProps) {
-  const isKit = 'imageUrls' in item;
-  const imageUrl = isKit ? item.imageUrls[0] : item.imageUrl;
+  const isKit = 'productIds' in item;
+  const imageUrl = item.imageUrl;
 
   const handleWhatsAppClick = () => {
     const link = generateWhatsAppLink(item, STORE_WHATSAPP);

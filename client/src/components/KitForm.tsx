@@ -1,107 +1,138 @@
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { insertKitSchema, type InsertKit, type Kit } from "@shared/schema";
+import { insertKitSchema, type Kit, type InsertKit, type Product } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Switch } from "@/components/ui/switch";
-import { useState } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { Upload, X } from "lucide-react";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "@/lib/firebase";
 import { useToast } from "@/hooks/use-toast";
+import { useQuery } from "@tanstack/react-query";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  FormDescription,
+} from "@/components/ui/form";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface KitFormProps {
   kit?: Kit;
   onSubmit: (data: InsertKit) => void;
   onCancel: () => void;
-  isPending?: boolean;
+  isPending: boolean;
 }
 
 export function KitForm({ kit, onSubmit, onCancel, isPending }: KitFormProps) {
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
-  const [imagePreviews, setImagePreviews] = useState<string[]>(kit?.imageUrls || []);
-  const [uploading, setUploading] = useState(false);
   const { toast } = useToast();
+  const [selectedProducts, setSelectedProducts] = useState<string[]>(kit?.productIds || []);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>(kit?.imageUrl || "");
+  const [uploading, setUploading] = useState(false);
+
+  const { data: products = [] } = useQuery<Product[]>({
+    queryKey: ['/api/products'],
+  });
 
   const form = useForm<InsertKit>({
     resolver: zodResolver(insertKitSchema),
-    defaultValues: kit ? {
-      name: kit.name,
-      description: kit.description,
-      price: kit.price,
-      imageUrls: kit.imageUrls,
-      isFeatured: kit.isFeatured,
-    } : {
-      name: "",
-      description: "",
-      price: 0,
-      imageUrls: [],
-      isFeatured: false,
+    defaultValues: {
+      name: kit?.name || "",
+      description: kit?.description || "",
+      price: kit?.price || 0,
+      imageUrl: kit?.imageUrl || "",
+      productIds: kit?.productIds || [],
+      isFeatured: kit?.isFeatured || false,
     },
   });
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (files.length > 0) {
-      setImageFiles(prev => [...prev, ...files]);
+  useEffect(() => {
+    if (selectedProducts.length > 0) {
+      const totalPrice = products
+        .filter(p => selectedProducts.includes(p.id))
+        .reduce((sum, p) => sum + p.price, 0);
       
-      files.forEach(file => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setImagePreviews(prev => [...prev, reader.result as string]);
-        };
-        reader.readAsDataURL(file);
-      });
+      if (!kit) {
+        form.setValue('price', totalPrice);
+      }
+    }
+  }, [selectedProducts, products, kit, form]);
+
+  const handleImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
-  const removeImage = (index: number) => {
-    setImageFiles(prev => prev.filter((_, i) => i !== index));
-    setImagePreviews(prev => prev.filter((_, i) => i !== index));
-    const currentUrls = form.getValues("imageUrls");
-    form.setValue("imageUrls", currentUrls.filter((_, i) => i !== index));
-  };
-
-  const uploadImages = async (): Promise<string[]> => {
-    if (imageFiles.length === 0) {
-      return form.getValues("imageUrls");
-    }
-
-    setUploading(true);
-    try {
-      const uploadPromises = imageFiles.map(async (file) => {
-        const timestamp = Date.now();
-        const fileName = `kits/${timestamp}_${file.name}`;
-        const storageRef = ref(storage, fileName);
-        await uploadBytes(storageRef, file);
-        return await getDownloadURL(storageRef);
-      });
-
-      const newUrls = await Promise.all(uploadPromises);
-      const existingUrls = form.getValues("imageUrls");
-      return [...existingUrls, ...newUrls];
-    } catch (error) {
-      console.error("Upload error:", error);
-      toast({
-        title: "Erro no upload",
-        description: "Não foi possível fazer upload das imagens",
-        variant: "destructive",
-      });
-      throw error;
-    } finally {
-      setUploading(false);
-    }
+  const handleProductToggle = (productId: string) => {
+    setSelectedProducts(prev => {
+      const updated = prev.includes(productId)
+        ? prev.filter(id => id !== productId)
+        : [...prev, productId];
+      
+      form.setValue('productIds', updated);
+      return updated;
+    });
   };
 
   const handleSubmit = async (data: InsertKit) => {
-    try {
-      const imageUrls = await uploadImages();
-      onSubmit({ ...data, imageUrls });
-    } catch (error) {
-      // Error already handled in uploadImages
+    if (selectedProducts.length === 0) {
+      toast({
+        title: "Selecione produtos",
+        description: "Você precisa selecionar pelo menos um produto para o kit",
+        variant: "destructive",
+      });
+      return;
     }
+
+    let imageUrl = data.imageUrl;
+
+    if (imageFile) {
+      setUploading(true);
+      try {
+        const storageRef = ref(storage, `kits/${Date.now()}_${imageFile.name}`);
+        await uploadBytes(storageRef, imageFile);
+        imageUrl = await getDownloadURL(storageRef);
+      } catch (error) {
+        console.error("Upload error:", error);
+        toast({
+          title: "Erro no upload",
+          description: "Não foi possível fazer upload da imagem",
+          variant: "destructive",
+        });
+        setUploading(false);
+        return;
+      }
+      setUploading(false);
+    }
+
+    if (!imageUrl) {
+      toast({
+        title: "Imagem obrigatória",
+        description: "Você precisa adicionar uma foto do kit",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    onSubmit({
+      ...data,
+      imageUrl,
+      productIds: selectedProducts,
+    });
   };
 
   return (
@@ -114,7 +145,11 @@ export function KitForm({ kit, onSubmit, onCancel, isPending }: KitFormProps) {
             <FormItem>
               <FormLabel>Nome do Kit</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="Ex: Conjunto Verão" data-testid="input-kit-name" />
+                <Input
+                  {...field}
+                  placeholder="Ex: Kit Executivo - Camisa + Calça"
+                  data-testid="input-kit-name"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -140,12 +175,67 @@ export function KitForm({ kit, onSubmit, onCancel, isPending }: KitFormProps) {
           )}
         />
 
+        <div className="space-y-3">
+          <Label>Produtos do Kit</Label>
+          <p className="text-sm text-muted-foreground">
+            Selecione os produtos que fazem parte deste kit
+          </p>
+          
+          {products.length === 0 ? (
+            <Card>
+              <CardContent className="p-6 text-center text-muted-foreground">
+                Nenhum produto cadastrado. Cadastre produtos primeiro na aba "Produtos".
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-96 overflow-y-auto border rounded-lg p-4">
+              {products.map(product => (
+                <div
+                  key={product.id}
+                  className="flex items-start gap-3 p-3 rounded-lg border hover-elevate transition-all cursor-pointer"
+                  onClick={() => handleProductToggle(product.id)}
+                  data-testid={`checkbox-product-${product.id}`}
+                >
+                  <Checkbox
+                    checked={selectedProducts.includes(product.id)}
+                    onCheckedChange={() => handleProductToggle(product.id)}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start gap-3">
+                      <img
+                        src={product.imageUrl}
+                        alt={product.name}
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm line-clamp-1">{product.name}</p>
+                        <p className="text-xs text-muted-foreground line-clamp-2">
+                          {product.description}
+                        </p>
+                        <p className="text-sm font-bold text-primary mt-1">
+                          R$ {product.price.toFixed(2)}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          
+          {selectedProducts.length > 0 && (
+            <p className="text-sm text-primary font-medium">
+              {selectedProducts.length} {selectedProducts.length === 1 ? 'produto selecionado' : 'produtos selecionados'}
+            </p>
+          )}
+        </div>
+
         <FormField
           control={form.control}
           name="price"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Preço (R$)</FormLabel>
+              <FormLabel>Preço do Kit (R$)</FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -156,58 +246,60 @@ export function KitForm({ kit, onSubmit, onCancel, isPending }: KitFormProps) {
                   data-testid="input-kit-price"
                 />
               </FormControl>
+              <FormDescription>
+                {selectedProducts.length > 0 && (
+                  <span className="text-xs">
+                    Sugestão: R$ {products
+                      .filter(p => selectedProducts.includes(p.id))
+                      .reduce((sum, p) => sum + p.price, 0)
+                      .toFixed(2)} (soma dos produtos)
+                  </span>
+                )}
+              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
 
         <div className="space-y-2">
-          <FormLabel>Imagens do Kit (Múltiplas)</FormLabel>
-          
-          {imagePreviews.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-              {imagePreviews.map((preview, index) => (
-                <div key={index} className="relative group">
-                  <img
-                    src={preview}
-                    alt={`Preview ${index + 1}`}
-                    className="w-full aspect-square object-cover rounded-lg"
-                  />
-                  <Button
-                    type="button"
-                    variant="destructive"
-                    size="icon"
-                    className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                    onClick={() => removeImage(index)}
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          )}
-
+          <FormLabel>Foto do Kit Montado</FormLabel>
           <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover-elevate transition-all">
-            <input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImageChange}
-              className="hidden"
-              id="kit-images"
-              data-testid="input-kit-images"
-            />
-            <label htmlFor="kit-images" className="cursor-pointer">
-              <div className="space-y-2">
-                <Upload className="w-12 h-12 mx-auto text-muted-foreground" />
-                <p className="text-sm text-muted-foreground">
-                  Clique para adicionar imagens
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Você pode selecionar múltiplas imagens
-                </p>
+            {imagePreview ? (
+              <div className="relative">
+                <img
+                  src={imagePreview}
+                  alt="Preview"
+                  className="max-h-64 mx-auto rounded-lg"
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="icon"
+                  className="absolute top-2 right-2"
+                  onClick={() => {
+                    setImageFile(null);
+                    setImagePreview("");
+                  }}
+                  data-testid="button-remove-image"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
               </div>
-            </label>
+            ) : (
+              <label className="cursor-pointer block">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageSelect}
+                  className="hidden"
+                  data-testid="input-kit-image"
+                />
+                <Upload className="w-12 h-12 mx-auto text-muted-foreground mb-2" />
+                <p className="text-sm text-muted-foreground">
+                  Clique para escolher uma foto do kit montado
+                </p>
+              </label>
+            )}
           </div>
         </div>
 
@@ -215,41 +307,39 @@ export function KitForm({ kit, onSubmit, onCancel, isPending }: KitFormProps) {
           control={form.control}
           name="isFeatured"
           render={({ field }) => (
-            <FormItem className="flex items-center justify-between rounded-lg border border-border p-4">
-              <div className="space-y-0.5">
-                <FormLabel>Kit em Destaque</FormLabel>
-                <p className="text-sm text-muted-foreground">
-                  Exibir este kit na seção de destaques
-                </p>
-              </div>
+            <FormItem className="flex items-center gap-2 space-y-0">
               <FormControl>
-                <Switch
+                <Checkbox
                   checked={field.value}
                   onCheckedChange={field.onChange}
-                  data-testid="switch-kit-featured"
+                  data-testid="checkbox-featured"
                 />
               </FormControl>
+              <FormLabel className="!mt-0 cursor-pointer">
+                Marcar como destaque
+              </FormLabel>
             </FormItem>
           )}
         />
 
-        <div className="flex gap-3">
-          <Button
-            type="submit"
-            disabled={isPending || uploading}
-            className="flex-1"
-            data-testid="button-submit-kit"
-          >
-            {uploading ? "Fazendo upload..." : isPending ? "Salvando..." : kit ? "Atualizar" : "Criar Kit"}
-          </Button>
+        <div className="flex gap-3 pt-4">
           <Button
             type="button"
             variant="outline"
             onClick={onCancel}
             disabled={isPending || uploading}
-            data-testid="button-cancel-kit"
+            className="flex-1"
+            data-testid="button-cancel"
           >
             Cancelar
+          </Button>
+          <Button
+            type="submit"
+            disabled={isPending || uploading || selectedProducts.length === 0}
+            className="flex-1"
+            data-testid="button-submit"
+          >
+            {uploading ? "Enviando..." : isPending ? "Salvando..." : kit ? "Atualizar Kit" : "Salvar Kit"}
           </Button>
         </div>
       </form>

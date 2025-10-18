@@ -79,7 +79,8 @@ shared/
 - name: string
 - description: string
 - price: number
-- imageUrls: string[]
+- imageUrl: string (foto do kit montado)
+- productIds: string[] (IDs dos produtos que compõem o kit)
 - isFeatured: boolean
 - createdAt: number
 
@@ -117,8 +118,11 @@ Seguindo design_guidelines.md:
   - Backend Firebase Admin SDK com Service Account
   - APIs protegidas com autenticação Firebase
   - Sistema de upload de imagens para Firebase Storage
-  - Autenticação com Google Sign-In
+  - Autenticação alterada de Google para Email/Senha
+  - Sistema de Kits reformulado para selecionar produtos individuais
+  - Kits agora têm uma foto do conjunto montado + produtos selecionados
   - Integração WhatsApp com mensagens automáticas
   - Validação de formulários com Zod (z.coerce.number para preços)
   - Domínio Replit autorizado no Firebase Console
+  - Redirecionamento após login para aba Kits
   - Testes E2E passando com sucesso
