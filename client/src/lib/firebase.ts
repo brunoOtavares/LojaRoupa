@@ -4,17 +4,15 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
-// Trim whitespace from env vars to prevent issues
-const apiKey = import.meta.env.VITE_FIREBASE_API_KEY?.trim();
-const projectId = import.meta.env.VITE_FIREBASE_PROJECT_ID?.trim();
-const appId = import.meta.env.VITE_FIREBASE_APP_ID?.trim();
-
+// Firebase configuration
 const firebaseConfig = {
-  apiKey,
-  authDomain: `${projectId}.firebaseapp.com`,
-  projectId,
-  storageBucket: `${projectId}.appspot.com`,
-  appId,
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: "michel-multimarcas.firebaseapp.com",
+  projectId: "michel-multimarcas",
+  storageBucket: "michel-multimarcas.firebasestorage.app",
+  messagingSenderId: "918302799335",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: "G-59SCHV89DT"
 };
 
 export const app = initializeApp(firebaseConfig);
