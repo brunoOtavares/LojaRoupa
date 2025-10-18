@@ -48,6 +48,8 @@ export function ProductForm({ product, onSubmit, onCancel, isPending }: ProductF
     const file = e.target.files?.[0];
     if (file) {
       setImageFile(file);
+      // Marca como "pending upload" para passar na validação
+      form.setValue("imageUrl", "pending-upload", { shouldValidate: true });
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
@@ -58,7 +60,18 @@ export function ProductForm({ product, onSubmit, onCancel, isPending }: ProductF
 
   const uploadImage = async (): Promise<string> => {
     if (!imageFile) {
-      return form.getValues("imageUrl");
+      const currentUrl = form.getValues("imageUrl");
+      // Se não há arquivo novo e a URL atual é válida (edição), retorna
+      if (currentUrl && currentUrl.startsWith("http")) {
+        return currentUrl;
+      }
+      // Se chegou aqui sem arquivo, erro
+      toast({
+        title: "Erro",
+        description: "Por favor, selecione uma imagem",
+        variant: "destructive",
+      });
+      throw new Error("No image file");
     }
 
     setUploading(true);
@@ -83,22 +96,17 @@ export function ProductForm({ product, onSubmit, onCancel, isPending }: ProductF
   };
 
   const handleSubmit = async (data: InsertProduct) => {
-    console.log("📝 handleSubmit chamado com data:", data);
-    console.log("🖼️ imageFile:", imageFile);
-    console.log("🔍 Erros do formulário:", form.formState.errors);
     try {
       const imageUrl = await uploadImage();
-      console.log("✅ Upload concluído, URL:", imageUrl);
       onSubmit({ ...data, imageUrl });
     } catch (error) {
-      console.error("❌ Erro no submit:", error);
+      // Error already handled in uploadImage
     }
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit, (errors) => {
-        console.log("❌ ERROS DE VALIDAÇÃO:", errors);
         if (errors.imageUrl) {
           toast({
             title: "Imagem obrigatória",
@@ -248,7 +256,6 @@ export function ProductForm({ product, onSubmit, onCancel, isPending }: ProductF
             disabled={isPending || uploading}
             className="flex-1"
             data-testid="button-submit-product"
-            onClick={() => console.log("🔘 Botão Criar Produto clicado!")}
           >
             {uploading ? "Fazendo upload..." : isPending ? "Salvando..." : product ? "Atualizar" : "Criar Produto"}
           </Button>
