@@ -76,7 +76,14 @@ export function ProductForm({ product, onSubmit, onCancel, isPending }: ProductF
     setUploading(true);
     try {
       // Get presigned upload URL from backend
-      const { uploadURL } = await apiRequest("POST", "/api/upload", {}) as unknown as { uploadURL: string };
+      const response = await apiRequest("POST", "/api/upload", {});
+      console.log("Upload response:", response);
+      const uploadURL = (response as any)?.uploadURL;
+      console.log("Upload URL:", uploadURL);
+
+      if (!uploadURL) {
+        throw new Error("No upload URL received from server");
+      }
 
       // Upload file directly to Replit Object Storage
       const uploadResponse = await fetch(uploadURL, {
