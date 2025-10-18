@@ -97,7 +97,14 @@ export function ProductForm({ product, onSubmit, onCancel, isPending }: ProductF
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(handleSubmit, (errors) => {
+        console.log("❌ ERROS DE VALIDAÇÃO:", errors);
+        toast({
+          title: "Erro de validação",
+          description: "Por favor, faça upload de uma imagem do produto",
+          variant: "destructive",
+        });
+      })} className="space-y-6">
         <FormField
           control={form.control}
           name="name"

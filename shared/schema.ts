@@ -12,7 +12,9 @@ export const productSchema = z.object({
   createdAt: z.number(),
 });
 
-export const insertProductSchema = productSchema.omit({ id: true, createdAt: true });
+export const insertProductSchema = productSchema.omit({ id: true, createdAt: true }).extend({
+  imageUrl: z.union([z.string().url("URL de imagem inválida"), z.literal("")]),
+});
 
 export type Product = z.infer<typeof productSchema>;
 export type InsertProduct = z.infer<typeof insertProductSchema>;
