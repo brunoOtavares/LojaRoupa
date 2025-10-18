@@ -99,11 +99,19 @@ export function ProductForm({ product, onSubmit, onCancel, isPending }: ProductF
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit, (errors) => {
         console.log("❌ ERROS DE VALIDAÇÃO:", errors);
-        toast({
-          title: "Erro de validação",
-          description: "Por favor, faça upload de uma imagem do produto",
-          variant: "destructive",
-        });
+        if (errors.imageUrl) {
+          toast({
+            title: "Imagem obrigatória",
+            description: "Por favor, faça upload de uma imagem do produto",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Erro de validação",
+            description: "Verifique todos os campos do formulário",
+            variant: "destructive",
+          });
+        }
       })} className="space-y-6">
         <FormField
           control={form.control}
@@ -160,8 +168,10 @@ export function ProductForm({ product, onSubmit, onCancel, isPending }: ProductF
         />
 
         <div className="space-y-2">
-          <FormLabel>Imagem do Produto</FormLabel>
-          <div className="border-2 border-dashed border-border rounded-lg p-6 text-center hover-elevate transition-all">
+          <FormLabel>Imagem do Produto <span className="text-destructive">*</span></FormLabel>
+          <div className={`border-2 border-dashed rounded-lg p-6 text-center hover-elevate transition-all ${
+            form.formState.errors.imageUrl ? 'border-destructive' : 'border-border'
+          }`}>
             <input
               type="file"
               accept="image/*"
@@ -203,6 +213,11 @@ export function ProductForm({ product, onSubmit, onCancel, isPending }: ProductF
               )}
             </label>
           </div>
+          {form.formState.errors.imageUrl && (
+            <p className="text-sm text-destructive">
+              {form.formState.errors.imageUrl.message}
+            </p>
+          )}
         </div>
 
         <FormField
