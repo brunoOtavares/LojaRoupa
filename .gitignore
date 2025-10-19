@@ -7,3 +7,5 @@ vite.config.ts.*
 serviceAccountKey.json
 .env
 attached_assets/
+.replit
+.local/
