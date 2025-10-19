@@ -131,3 +131,22 @@ module.exports = {
 ```
 
 After deploying these changes, refreshing any page should work correctly without 404 errors.
+
+## Fixing MIME Type Errors for JavaScript Modules
+
+If you're encountering errors like:
+```
+Failed to load module script: Expected a JavaScript-or-Wasm module script but the server responded with a MIME type of "text/html"
+```
+
+This happens when the server tries to serve JavaScript files as HTML. The updated `vercel.json` configuration now includes specific routes for static assets to ensure they're served with the correct MIME types.
+
+### What was fixed:
+1. **Added specific routes for assets**: `/assets/(.*)` now correctly serves files from the assets directory
+2. **Added file extension matching**: JavaScript, CSS, and other static files are served directly without being redirected to index.html
+3. **Maintained SPA routing**: All other routes still redirect to index.html for client-side routing
+
+If you still encounter MIME type errors after deployment:
+1. Clear your browser cache completely
+2. Try the site in an incognito/private window
+3. Check the Vercel deployment logs for any additional errors
