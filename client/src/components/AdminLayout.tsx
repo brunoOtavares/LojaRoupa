@@ -67,22 +67,27 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-border bg-card sticky top-0 z-50">
+      <header className="sticky top-0 z-50 black-bg backdrop-blur-md border-b gold-border">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-2">
-              <ShoppingBag className="w-6 h-6 text-primary" />
-              <span className="text-lg font-semibold">Admin</span>
+          <div className="flex items-center justify-between h-20 md:h-24">
+            {/* Logo */}
+            <div className="flex items-center hover-elevate active-elevate-2 rounded-xl px-4 py-3 -ml-4 cursor-pointer transition-all duration-300">
+              <img
+                src="/logoheader.png"
+                alt="Michel Multimarcas Logo"
+                className="w-20 h-20 object-contain filter drop-shadow-lg"
+              />
+              <span className="text-lg font-oswald font-bold uppercase tracking-wide text-white ml-3">Admin</span>
             </div>
             
             <div className="flex items-center gap-4">
-              <span className="text-sm text-muted-foreground hidden sm:inline">
+              <span className="text-sm text-white/80 hidden sm:inline">
                 {user.email}
               </span>
               <Button
                 variant="outline"
                 onClick={handleLogout}
-                className="gap-2"
+                className="gap-2 border-gold-border text-white hover:text-primary hover:bg-black/30 rounded-xl"
                 data-testid="button-logout"
               >
                 <LogOut className="w-4 h-4" />
@@ -94,13 +99,17 @@ export function AdminLayout({ children }: AdminLayoutProps) {
       </header>
 
       {/* Navigation */}
-      <nav className="border-b border-border bg-card/50">
+      <nav className="border-b border-border dark-gray-bg">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
-          <div className="flex gap-1 overflow-x-auto">
+          <div className="flex gap-1 overflow-x-auto py-4">
             <Button
               variant={location === "/admin/kits" || location === "/admin" ? "default" : "ghost"}
               onClick={() => setLocation("/admin/kits")}
-              className="gap-2 flex-shrink-0"
+              className={`gap-2 flex-shrink-0 px-6 py-3 rounded-xl text-base font-oswald font-semibold uppercase tracking-wide transition-all duration-300 hover-elevate active-elevate-2 ${
+                location === "/admin/kits" || location === "/admin"
+                  ? "gold-accent bg-black/50"
+                  : "text-white hover:text-primary hover:bg-black/30"
+              }`}
               data-testid="button-nav-kits"
             >
               <Grid3x3 className="w-4 h-4" />
@@ -109,7 +118,11 @@ export function AdminLayout({ children }: AdminLayoutProps) {
             <Button
               variant={location === "/admin/produtos" ? "default" : "ghost"}
               onClick={() => setLocation("/admin/produtos")}
-              className="gap-2 flex-shrink-0"
+              className={`gap-2 flex-shrink-0 px-6 py-3 rounded-xl text-base font-oswald font-semibold uppercase tracking-wide transition-all duration-300 hover-elevate active-elevate-2 ${
+                location === "/admin/produtos"
+                  ? "gold-accent bg-black/50"
+                  : "text-white hover:text-primary hover:bg-black/30"
+              }`}
               data-testid="button-nav-products"
             >
               <Package className="w-4 h-4" />
