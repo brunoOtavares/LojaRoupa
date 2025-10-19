@@ -15,12 +15,28 @@ To fix the Firebase authentication error when deploying to Vercel, you need to c
 - **Value**: `AIzaSyBnEdEiyfvlHUnYsU3PcSWjuwgvznlobPU`
 - **Environments**: Production, Preview, Development
 
+- **Name**: `VITE_FIREBASE_AUTH_DOMAIN`
+- **Value**: `michel-multimarcas.firebaseapp.com`
+- **Environments**: Production, Preview, Development
+
 - **Name**: `VITE_FIREBASE_PROJECT_ID`
 - **Value**: `michel-multimarcas`
 - **Environments**: Production, Preview, Development
 
+- **Name**: `VITE_FIREBASE_STORAGE_BUCKET`
+- **Value**: `michel-multimarcas.firebasestorage.app`
+- **Environments**: Production, Preview, Development
+
+- **Name**: `VITE_FIREBASE_MESSAGING_SENDER_ID`
+- **Value**: `918302799335`
+- **Environments**: Production, Preview, Development
+
 - **Name**: `VITE_FIREBASE_APP_ID`
 - **Value**: `1:918302799335:web:0c3c9361afe367a9583942`
+- **Environments**: Production, Preview, Development
+
+- **Name**: `VITE_FIREBASE_MEASUREMENT_ID`
+- **Value**: `G-59SCHV89DT`
 - **Environments**: Production, Preview, Development
 
 #### Server Configuration

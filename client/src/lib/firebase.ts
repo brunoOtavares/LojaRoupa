@@ -7,16 +7,17 @@ import { getStorage } from "firebase/storage";
 // Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: "michel-multimarcas.firebaseapp.com",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "michel-multimarcas.firebaseapp.com",
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: "michel-multimarcas.firebasestorage.app",
-  messagingSenderId: "918302799335",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "michel-multimarcas.firebasestorage.app",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "918302799335",
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: "G-59SCHV89DT"
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || "G-59SCHV89DT"
 };
 
 // Validate required environment variables
 const requiredEnvVars = ['VITE_FIREBASE_API_KEY', 'VITE_FIREBASE_PROJECT_ID', 'VITE_FIREBASE_APP_ID'];
+const optionalEnvVars = ['VITE_FIREBASE_AUTH_DOMAIN', 'VITE_FIREBASE_STORAGE_BUCKET', 'VITE_FIREBASE_MESSAGING_SENDER_ID', 'VITE_FIREBASE_MEASUREMENT_ID'];
 const missingVars = requiredEnvVars.filter(varName => !import.meta.env[varName]);
 
 if (missingVars.length > 0) {
