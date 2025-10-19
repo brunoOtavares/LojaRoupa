@@ -75,9 +75,59 @@ If you're experiencing 404 errors when refreshing pages like `/admin`, `/destaqu
 
 The following changes have been made to fix this issue:
 
-1. **Updated `vercel.json`**: Added a rewrites rule to redirect all requests to `index.html`
+1. **Updated `vercel.json`**: Added routes configuration to handle SPA routing
 2. **Added `_redirects` file**: Placed in `client/public/_redirects` to ensure proper routing
 
-These changes ensure that all routes are handled by your React application instead of trying to find actual files on the server.
+### Additional Steps if 404 Errors Persist:
+
+If you're still getting 404 errors after deployment, try these additional solutions:
+
+#### Option 1: Use Vercel's Header Configuration
+Create a `vercel.json` file with the following configuration (already implemented):
+```json
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist/public"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.ts"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
+```
+
+#### Option 2: Configure in Vercel Dashboard
+1. Go to your Vercel project dashboard
+2. Navigate to **Settings** → **Functions**
+3. In the **Rewrites** section, add:
+   - Source: `/(.*)`
+   - Destination: `/index.html`
+
+#### Option 3: Use Vercel's Next.js Configuration
+If the above doesn't work, you might need to add a `next.config.js` file (even though you're not using Next.js):
+```javascript
+module.exports = {
+  rewrites: () => [
+    { source: '/(.*)', destination: '/index.html' }
+  ]
+}
+```
 
 After deploying these changes, refreshing any page should work correctly without 404 errors.

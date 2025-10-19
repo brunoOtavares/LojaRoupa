@@ -19,14 +19,12 @@
       "dest": "/api/index.ts"
     },
     {
-      "src": "/(.*)",
-      "dest": "/dist/public/index.html"
-    }
-  ],
-  "rewrites": [
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
