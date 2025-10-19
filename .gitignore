@@ -6,3 +6,6 @@ vite.config.ts.*
 *.tar.gz"serviceAccountKey.json" 
 ".env" 
 "attached_assets/" 
+"attached_assets/Pasted--type-service-account-project-id-michel-multimarcas-private-key-id-27b52be-1760795908017_1760795908019.txt"  
+"serviceAccountKey.json"  
+".env" 
