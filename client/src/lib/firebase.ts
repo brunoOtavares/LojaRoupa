@@ -6,12 +6,12 @@ import { getStorage } from "firebase/storage";
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  apiKey: "AIzaSyBjCnqPwVvF7xNqZ3hT8kL9mXoPqR7sT6Y",
   authDomain: "michel-multimarcas.firebaseapp.com",
   projectId: "michel-multimarcas",
   storageBucket: "michel-multimarcas.firebasestorage.app",
   messagingSenderId: "918302799335",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  appId: "1:918302799335:web:abc123def456ghi789",
   measurementId: "G-59SCHV89DT"
 };
 
