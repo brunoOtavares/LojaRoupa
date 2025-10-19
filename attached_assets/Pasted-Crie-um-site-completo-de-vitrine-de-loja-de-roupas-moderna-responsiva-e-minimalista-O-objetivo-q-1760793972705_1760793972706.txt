@@ -1,0 +1,117 @@
+Crie um site completo de vitrine de loja de roupas moderna, responsiva e minimalista.
+O objetivo é que clientes possam ver os produtos e conjuntos, e ao clicar, sejam redirecionados para o WhatsApp com uma mensagem automática contendo as informações do produto.
+Além disso, deve haver uma área administrativa onde o dono da loja pode gerenciar os produtos e kits.
+
+🏪 FUNCIONALIDADES
+🛍️ Vitrine pública
+
+Mostrar produtos individuais (como blusas, calças, chapéus, etc.).
+
+Mostrar também kits/conjuntos (ex: “Camisa + Calça + Boné”).
+
+Cada item deve exibir:
+
+Imagem
+
+Nome
+
+Descrição curta
+
+Botão “Ver no WhatsApp”
+
+Ao clicar em “Ver no WhatsApp”, abrir o link:
+https://wa.me/SEU_NUMERO?text=Olá!%20Estou%20interessado(a)%20no%20produto%20[NOME_DO_PRODUTO].%20Gostaria%20de%20saber%20o%20valor%20e%20a%20disponibilidade.
+
+🌟 Itens em destaque
+
+Uma seção na página inicial com produtos marcados como destaque.
+
+Pode ser um carrossel ou grade especial no topo.
+
+🧑‍💼 Painel do Administrador
+
+Login de administrador (usuário e senha simples).
+
+Funcionalidades:
+
+Adicionar produtos individuais (nome, descrição, imagem e tipo).
+
+Adicionar kits/conjuntos (com várias imagens e descrição).
+
+Marcar produtos como “em destaque”.
+
+Editar e excluir produtos.
+
+Armazenar os dados e imagens no Firebase (Firestore + Storage).
+
+Autenticação do admin com Firebase Auth.
+
+🧭 Header / Menu
+
+Logo ou nome da loja.
+
+Abas:
+
+“Vitrine”
+
+“Itens em Destaque”
+
+“Contato”
+
+Na aba Contato, exibir:
+
+Instagram (ícone e link)
+
+WhatsApp (ícone e link)
+
+Endereço físico da loja
+
+🎨 DESIGN E ESTILO
+
+Visual limpo, moderno e minimalista (pense em cores claras e foco nas fotos das roupas).
+
+Usar React + TailwindCSS.
+
+Totalmente responsivo para celular e desktop.
+
+Suave e agradável de navegar (pode usar Framer Motion para pequenas animações).
+
+🧰 TECNOLOGIAS
+
+Frontend: React + TailwindCSS
+
+Backend: Firebase (Firestore + Storage + Auth)
+
+Deploy: Vercel
+
+WhatsApp redirect: links dinâmicos com template de mensagem
+
+🧾 ESTRUTURA SUGERIDA
+
+/ → Página principal (vitrine + destaques)
+
+/admin → Painel de administração (login + gerenciamento de produtos/kits)
+
+/contato → Página de contato com redes sociais e endereço
+
+💬 MENSAGEM AUTOMÁTICA NO WHATSAPP
+
+Exemplo de texto gerado automaticamente:
+
+Olá! Estou interessado(a) no produto:
+Blusa Social Feminina - Tamanho M
+Gostaria de saber o valor e a disponibilidade.
+
+✅ REQUISITOS DE ENTREGA
+
+O projeto deve gerar:
+
+Página pública da vitrine
+
+Painel admin funcional
+
+Integração automática com WhatsApp
+
+Layout bonito, limpo e responsivo
+
+Suporte a produtos e kits com imagens
