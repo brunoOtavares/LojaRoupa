@@ -11,6 +11,9 @@ import { getFirestore } from "firebase-admin/firestore";
 import { getAuth } from "firebase-admin/auth";
 
 // Firebase initialization
+let firebaseInitialized = false;
+let firebaseError: Error | null = null;
+
 if (getApps().length === 0) {
   try {
     const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
@@ -21,32 +24,66 @@ if (getApps().length === 0) {
         console.log("Successfully parsed service account key");
         initializeApp({
           credential: cert(serviceAccount),
-          projectId: "michel-multimarcas"
+          projectId: "layout-loja"
         });
+        firebaseInitialized = true;
         console.log("Firebase Admin initialized with service account from env");
       } catch (parseError) {
         console.error("Failed to parse service account JSON:", parseError);
         const fixedKey = serviceAccountKey.replace(/\\n/g, "\n");
         console.log("Attempting to parse with fixed newlines...");
-        const serviceAccount = JSON.parse(fixedKey);
-        console.log("Successfully parsed service account key after fixing newlines");
-        initializeApp({
-          credential: cert(serviceAccount),
-          projectId: "michel-multimarcas"
-        });
-        console.log("Firebase Admin initialized with service account from env (fixed newlines)");
+        try {
+          const serviceAccount = JSON.parse(fixedKey);
+          console.log("Successfully parsed service account key after fixing newlines");
+          initializeApp({
+            credential: cert(serviceAccount),
+            projectId: "layout-loja"
+          });
+          firebaseInitialized = true;
+          console.log("Firebase Admin initialized with service account from env (fixed newlines)");
+        } catch (secondParseError) {
+          firebaseError = new Error("Failed to parse service account key JSON");
+          console.error("Second attempt to parse service account failed:", secondParseError);
+        }
       }
     } else {
-      console.warn("No Firebase service account key found in environment variables");
-      initializeApp({
-        projectId: "michel-multimarcas"
-      });
+      // Try to load from local file for development
+      try {
+        const serviceAccount = require("./serviceAccountKey.json");
+        console.log("Found local serviceAccountKey.json file");
+        initializeApp({
+          credential: cert(serviceAccount),
+          projectId: "layout-loja"
+        });
+        firebaseInitialized = true;
+        console.log("Firebase Admin initialized with local service account file");
+      } catch (fileError) {
+        console.warn("No local serviceAccountKey.json file found");
+        console.warn("No Firebase service account key found in environment variables");
+        console.error("CRITICAL: Firebase Admin cannot be initialized without proper credentials.");
+        console.error("Please either:");
+        console.error("1. Add FIREBASE_SERVICE_ACCOUNT_KEY to your .env file");
+        console.error("2. Create a serviceAccountKey.json file in the api/ directory");
+        console.error("3. Download the service account key from Firebase Console");
+        
+        firebaseError = new Error("Firebase Admin not properly initialized - missing service account credentials");
+        
+        // Initialize without credentials for basic functionality
+        initializeApp({
+          projectId: "layout-loja"
+        });
+        console.log("Firebase Admin initialized with project ID only - LIMITED FUNCTIONALITY");
+      }
     }
   } catch (error) {
     console.error("Error initializing Firebase Admin:", error);
+    firebaseError = error as Error;
+    
+    // Initialize without credentials for basic functionality
     initializeApp({
-      projectId: "michel-multimarcas"
+      projectId: "layout-loja"
     });
+    console.log("Firebase Admin initialized with project ID only as fallback - LIMITED FUNCTIONALITY");
   }
 }
 
@@ -193,6 +230,25 @@ app.use((req, res, next) => {
 // API Routes
 app.get("/api/products", async (req, res) => {
   try {
+    // Check if Firebase is properly initialized
+    if (!db) {
+      console.error("Firestore database not initialized");
+      return res.status(500).json({
+        error: "Database not initialized",
+        details: "Firebase Admin SDK failed to initialize properly"
+      });
+    }
+    
+    // Check if Firebase was initialized with proper credentials
+    if (!firebaseInitialized || firebaseError) {
+      console.error("Firebase not properly initialized with credentials");
+      return res.status(500).json({
+        error: "Firebase authentication error",
+        details: "Firebase Admin SDK is not properly configured with service account credentials",
+        solution: "Please add FIREBASE_SERVICE_ACCOUNT_KEY to your environment variables or create a serviceAccountKey.json file"
+      });
+    }
+    
     const snapshot = await db.collection("products").get();
     const products: any[] = [];
     snapshot.forEach((doc) => {
@@ -201,7 +257,28 @@ app.get("/api/products", async (req, res) => {
     res.json(products);
   } catch (error) {
     console.error("Error fetching products:", error);
-    res.status(500).json({ error: "Failed to fetch products" });
+    
+    // Provide more specific error information
+    let errorMessage = "Failed to fetch products";
+    let errorDetails = "";
+    
+    if (error instanceof Error) {
+      if (error.message.includes("permission-denied")) {
+        errorMessage = "Permission denied accessing Firestore";
+        errorDetails = "Check Firebase security rules or service account permissions";
+      } else if (error.message.includes("unavailable") || error.message.includes("timeout")) {
+        errorMessage = "Firebase connection timed out";
+        errorDetails = "Please try again in a few moments";
+      } else if (error.message.includes("7 PERMISSION_DENIED")) {
+        errorMessage = "Firebase authentication failed";
+        errorDetails = "The service account does not have permission to access Firestore";
+      }
+    }
+    
+    res.status(500).json({
+      error: errorMessage,
+      details: errorDetails || "Check server logs for more information"
+    });
   }
 });
 
