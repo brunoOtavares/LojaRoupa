@@ -15,6 +15,17 @@ const firebaseConfig = {
   measurementId: "G-59SCHV89DT"
 };
 
+// Validate required environment variables
+const requiredEnvVars = ['VITE_FIREBASE_API_KEY', 'VITE_FIREBASE_PROJECT_ID', 'VITE_FIREBASE_APP_ID'];
+const missingVars = requiredEnvVars.filter(varName => !import.meta.env[varName]);
+
+if (missingVars.length > 0) {
+  console.error('Firebase Error: Missing required environment variables:', missingVars.join(', '));
+  console.error('Please ensure these variables are set in your deployment environment:');
+  missingVars.forEach(varName => console.error(`- ${varName}`));
+  throw new Error(`Firebase configuration incomplete. Missing: ${missingVars.join(', ')}`);
+}
+
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
