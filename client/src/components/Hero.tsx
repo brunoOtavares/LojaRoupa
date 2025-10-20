@@ -12,21 +12,15 @@ export function Hero() {
 
   return (
     <section className="relative h-[80vh] overflow-hidden">
-      {/* Background com textura de tecido */}
-      <div className="absolute inset-0 black-gradient">
-        {/* Overlay com textura sutil */}
-        <div className="absolute inset-0 opacity-20">
-          <div className="absolute inset-0 bg-gradient-to-br from-transparent via-black/30 to-black/50"></div>
-        </div>
-      </div>
-
-      {/* Logo de fundo com opacidade reduzida */}
-      <div className="absolute inset-0 z-10 flex items-center justify-center opacity-5">
+      {/* Background com imagem feminina */}
+      <div className="absolute inset-0">
         <img
-          src="/img/logo.jpg"
-          alt="Logo Background"
-          className="w-full h-full object-contain"
+          src="/img/loja_de_roupas_recife.webp"
+          alt="Fashion Store Background"
+          className="w-full h-full object-cover"
         />
+        {/* Overlay com gradiente rosa suave */}
+        <div className="absolute inset-0 bg-gradient-to-br from-pink/60 via-pink/40 to-pink/60"></div>
       </div>
 
       {/* Content */}
@@ -35,30 +29,55 @@ export function Hero() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
             className="space-y-6 md:space-y-8"
           >
-            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold font-oswald gold-accent uppercase tracking-wide">
-              Autenticidade em cada detalhe
-            </h1>
-            <p className="text-lg md:text-xl lg:text-2xl text-white/90 max-w-3xl mx-auto font-roboto leading-relaxed">
-              Peças pensadas pra quem vive o dia a dia com atitude e personalidade, sem precisar forçar nada.
-            </p>
-            <Button
-              onClick={scrollToProducts}
-              size="lg"
-              className="premium-button text-base md:text-lg px-6 md:px-8 py-3 md:py-4 mt-6 md:mt-8"
-              data-testid="button-explore-collection"
+            <motion.h1
+              className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold font-serif text-white uppercase tracking-wide drop-shadow-lg feminine-float"
+              animate={{
+                textShadow: [
+                  "0 2px 4px rgba(219, 112, 147, 0.3)",
+                  "0 4px 8px rgba(219, 112, 147, 0.5)",
+                  "0 2px 4px rgba(219, 112, 147, 0.3)"
+                ]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
             >
-              Explorar Coleção
-              <ArrowRight className="w-5 h-5 md:w-6 md:h-6 ml-2" />
-            </Button>
+              Elegância em cada detalhe
+            </motion.h1>
+            <p className="text-lg md:text-xl lg:text-2xl text-white/95 max-w-3xl mx-auto font-sans leading-relaxed drop-shadow">
+              Peças pensadas para a mulher moderna que valoriza estilo, sofisticação e autenticidade em cada momento.
+            </p>
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            >
+              <Button
+                onClick={scrollToProducts}
+                size="lg"
+                className="premium-button text-base md:text-lg px-6 md:px-8 py-3 md:py-4 mt-6 md:mt-8 feminine-button"
+                data-testid="button-explore-collection"
+              >
+                Explorar Coleção
+                <motion.div
+                  animate={{ x: [0, 5, 0] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <ArrowRight className="w-5 h-5 md:w-6 md:h-6 ml-2" />
+                </motion.div>
+              </Button>
+            </motion.div>
           </motion.div>
         </div>
       </div>
       
       {/* Elemento decorativo inferior */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black to-transparent"></div>
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-pink/20 to-transparent"></div>
     </section>
   );
 }

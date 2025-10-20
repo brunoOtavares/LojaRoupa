@@ -2,73 +2,73 @@
 @tailwind components;
 @tailwind utilities;
 
-/* PREMIUM MASCULINO - LIGHT MODE */
+/* PREMIUM FEMININO - LIGHT MODE */
 :root {
-  --button-outline: rgba(212, 175, 55, .20);
-  --badge-outline: rgba(212, 175, 55, .10);
+  --button-outline: rgba(219, 112, 147, .20);
+  --badge-outline: rgba(219, 112, 147, .10);
 
   /* Automatic computation of border around primary / danger buttons */
   --opaque-button-border-intensity: -8; /* In terms of percentages */
 
   /* Backgrounds applied on top of other backgrounds when hovered/active */
-  --elevate-1: rgba(212, 175, 55, .05);
-  --elevate-2: rgba(212, 175, 55, .10);
+  --elevate-1: rgba(219, 112, 147, .05);
+  --elevate-2: rgba(219, 112, 147, .10);
 
-  /* Cores base do tema premium masculino */
-  --background: 0 0% 0%; /* Preto #000000 */
-  --foreground: 0 0% 96%; /* Branco gelo quase puro */
-  --border: 0 0% 20%; /* Cinza escuro para bordas */
+  /* Cores base do tema premium feminino */
+  --background: 0 0% 98%; /* Branco suave #FAFAFA */
+  --foreground: 332 81% 30%; /* Rosa escuro para texto */
+  --border: 332 20% 85%; /* Rosa claro para bordas */
   
-  --card: 0 0% 96%; /* Branco gelo #F5F5F5 para cards */
-  --card-foreground: 0 0% 5%; /* Preto para texto nos cards */
-  --card-border: 0 0% 15%; /* Cinza médio para bordas de cards */
+  --card: 0 0% 100%; /* Branco puro para cards */
+  --card-foreground: 332 81% 30%; /* Rosa escuro para texto nos cards */
+  --card-border: 332 20% 90%; /* Rosa muito claro para bordas de cards */
   
-  --sidebar: 28 28% 11%; /* Cinza escuro #1C1C1C */
-  --sidebar-foreground: 0 0% 96%; /* Branco gelo para texto na sidebar */
-  --sidebar-border: 0 0% 20%; /* Cinza escuro para bordas da sidebar */
+  --sidebar: 332 81% 98%; /* Rosa muito claro para sidebar */
+  --sidebar-foreground: 332 81% 30%; /* Rosa escuro para texto na sidebar */
+  --sidebar-border: 332 20% 85%; /* Rosa claro para bordas da sidebar */
   
-  --sidebar-primary: 43 100% 55%; /* Dourado #D4AF37 */
-  --sidebar-primary-foreground: 0 0% 5%; /* Preto para texto em primary */
+  --sidebar-primary: 332 81% 60%; /* Rosa vibrante #DB7093 */
+  --sidebar-primary-foreground: 0 0% 100%; /* Branco para texto em primary */
   
-  --sidebar-accent: 43 20% 15%; /* Dourado escurecido para acentos */
-  --sidebar-accent-foreground: 0 0% 96%; /* Branco gelo para texto em acentos */
-  --sidebar-ring: 43 100% 55%; /* Dourado para ring */
+  --sidebar-accent: 332 40% 95%; /* Rosa suave para acentos */
+  --sidebar-accent-foreground: 332 81% 30%; /* Rosa escuro para texto em acentos */
+  --sidebar-ring: 332 81% 60%; /* Rosa para ring */
   
-  --popover: 28 28% 11%; /* Cinza escuro #1C1C1C */
-  --popover-foreground: 0 0% 96%; /* Branco gelo para texto em popovers */
-  --popover-border: 0 0% 20%; /* Cinza escuro para bordas de popovers */
+  --popover: 332 81% 98%; /* Rosa muito claro para popovers */
+  --popover-foreground: 332 81% 30%; /* Rosa escuro para texto em popovers */
+  --popover-border: 332 20% 85%; /* Rosa claro para bordas de popovers */
   
-  --primary: 43 100% 55%; /* Dourado #D4AF37 */
-  --primary-foreground: 0 0% 5%; /* Preto para texto em botões primários */
+  --primary: 332 81% 60%; /* Rosa vibrante #DB7093 */
+  --primary-foreground: 0 0% 100%; /* Branco para texto em botões primários */
   
-  --secondary: 28 28% 11%; /* Cinza escuro #1C1C1C */
-  --secondary-foreground: 0 0% 96%; /* Branco gelo para texto em secundários */
+  --secondary: 332 40% 95%; /* Rosa suave para secundários */
+  --secondary-foreground: 332 81% 30%; /* Rosa escuro para texto em secundários */
   
-  --muted: 0 0% 85%; /* Cinza claro para elementos mudos */
-  --muted-foreground: 0 0% 45%; /* Cinza médio para texto mudo */
+  --muted: 332 20% 92%; /* Rosa muito claro para elementos mudos */
+  --muted-foreground: 332 30% 50%; /* Rosa médio para texto mudo */
   
-  --accent: 43 100% 55%; /* Dourado para acentos */
-  --accent-foreground: 0 0% 5%; /* Preto para texto em acentos */
+  --accent: 332 81% 60%; /* Rosa para acentos */
+  --accent-foreground: 0 0% 100%; /* Branco para texto em acentos */
   
-  --destructive: 0 72% 45%; /* Vermelho para destrutivos */
+  --destructive: 0 72% 60%; /* Vermelho rosado para destrutivos */
   --destructive-foreground: 0 0% 100%; /* Branco para texto em destrutivos */
   
-  --input: 28 28% 18%; /* Cinza escuro para inputs */
-  --ring: 43 100% 55%; /* Dourado para ring de foco */
+  --input: 332 20% 90%; /* Rosa muito claro para inputs */
+  --ring: 332 81% 60%; /* Rosa para ring de foco */
   
-  --chart-1: 43 100% 55%; /* Dourado */
-  --chart-2: 200 70% 45%; /* Azul */
-  --chart-3: 140 60% 40%; /* Verde */
-  --chart-4: 280 65% 50%; /* Roxo */
-  --chart-5: 35 80% 55%; /* Laranja */
+  --chart-1: 332 81% 60%; /* Rosa */
+  --chart-2: 311 65% 70%; /* Roxo suave */
+  --chart-3: 176 60% 50%; /* Verde água */
+  --chart-4: 25 80% 65%; /* Pêssego */
+  --chart-5: 340 75% 65%; /* Rosa choque */
 
-  /* Tipografia premium masculina */
-  --font-sans: "Roboto", "Lato", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-serif: Georgia, serif;
+  /* Tipografia premium feminina */
+  --font-sans: "Playfair Display", "Georgia", serif;
+  --font-serif: "Dancing Script", cursive;
   --font-mono: Menlo, monospace;
   --font-college: "College Block", cursive;
-  --font-oswald: "Oswald", "Montserrat", sans-serif;
-  --font-bebas: "Bebas Neue", cursive;
+  --font-oswald: "Montserrat", "Open Sans", sans-serif;
+  --font-bebas: "Great Vibes", cursive;
   --font-rajdhani: "Rajdhani", sans-serif;
   
   /* Bordas arredondadas e sombras premium */
@@ -116,61 +116,61 @@
 }
 
 .dark {
-  --button-outline: rgba(212, 175, 55, .25);
-  --badge-outline: rgba(212, 175, 55, .15);
+  --button-outline: rgba(219, 112, 147, .25);
+  --badge-outline: rgba(219, 112, 147, .15);
 
   --opaque-button-border-intensity: 9;  /* In terms of percentages */
 
   /* Backgrounds applied on top of other backgrounds when hovered/active */
-  --elevate-1: rgba(212, 175, 55, .06);
-  --elevate-2: rgba(212, 175, 55, .12);
+  --elevate-1: rgba(219, 112, 147, .06);
+  --elevate-2: rgba(219, 112, 147, .12);
 
-  --background: 0 0% 2%; /* Preto mais profundo */
+  --background: 332 30% 8%; /* Rosa escuro profundo */
   --foreground: 0 0% 98%; /* Branco gelo mais brilhante */
-  --border: 0 0% 18%; /* Cinza escuro para bordas */
+  --border: 332 30% 18%; /* Rosa médio escuro para bordas */
   
-  --card: 28 28% 11%; /* Cinza escuro #1C1C1C para cards */
+  --card: 332 30% 12%; /* Rosa médio para cards */
   --card-foreground: 0 0% 98%; /* Branco gelo para texto nos cards */
-  --card-border: 0 0% 22%; /* Cinza médio para bordas de cards */
+  --card-border: 332 30% 22%; /* Rosa médio para bordas de cards */
   
-  --sidebar: 0 0% 4%; /* Preto mais escuro para sidebar */
+  --sidebar: 332 30% 6%; /* Rosa mais escuro para sidebar */
   --sidebar-foreground: 0 0% 98%; /* Branco gelo para texto na sidebar */
-  --sidebar-border: 0 0% 15%; /* Cinza escuro para bordas da sidebar */
+  --sidebar-border: 332 30% 15%; /* Rosa escuro para bordas da sidebar */
   
-  --sidebar-primary: 43 100% 60%; /* Dourado mais brilhante */
-  --sidebar-primary-foreground: 0 0% 2%; /* Preto para texto em primary */
+  --sidebar-primary: 332 81% 65%; /* Rosa mais vibrante */
+  --sidebar-primary-foreground: 0 0% 100%; /* Branco para texto em primary */
   
-  --sidebar-accent: 43 20% 12%; /* Dourado escurecido para acentos */
+  --sidebar-accent: 332 40% 18%; /* Rosa médio para acentos */
   --sidebar-accent-foreground: 0 0% 98%; /* Branco gelo para texto em acentos */
-  --sidebar-ring: 43 100% 60%; /* Dourado para ring */
+  --sidebar-ring: 332 81% 65%; /* Rosa para ring */
   
-  --popover: 0 0% 4%; /* Preto mais escuro para popovers */
+  --popover: 332 30% 6%; /* Rosa mais escuro para popovers */
   --popover-foreground: 0 0% 98%; /* Branco gelo para texto em popovers */
-  --popover-border: 0 0% 15%; /* Cinza escuro para bordas de popovers */
+  --popover-border: 332 30% 15%; /* Rosa escuro para bordas de popovers */
   
-  --primary: 43 100% 60%; /* Dourado mais brilhante */
-  --primary-foreground: 0 0% 2%; /* Preto para texto em botões primários */
+  --primary: 332 81% 65%; /* Rosa mais vibrante */
+  --primary-foreground: 0 0% 100%; /* Branco para texto em botões primários */
   
-  --secondary: 28 28% 11%; /* Cinza escuro #1C1C1C */
+  --secondary: 332 30% 12%; /* Rosa médio para secundários */
   --secondary-foreground: 0 0% 98%; /* Branco gelo para texto em secundários */
   
-  --muted: 0 0% 25%; /* Cinza médio para elementos mudos */
-  --muted-foreground: 0 0% 60%; /* Cinza claro para texto mudo */
+  --muted: 332 30% 25%; /* Rosa médio para elementos mudos */
+  --muted-foreground: 0 0% 60%; /* Rosa claro para texto mudo */
   
-  --accent: 43 100% 60%; /* Dourado para acentos */
-  --accent-foreground: 0 0% 2%; /* Preto para texto em acentos */
+  --accent: 332 81% 65%; /* Rosa para acentos */
+  --accent-foreground: 0 0% 100%; /* Branco para texto em acentos */
   
-  --destructive: 0 72% 45%; /* Vermelho para destrutivos */
+  --destructive: 0 72% 60%; /* Vermelho rosado para destrutivos */
   --destructive-foreground: 0 0% 100%; /* Branco para texto em destrutivos */
   
-  --input: 28 28% 15%; /* Cinza escuro para inputs */
-  --ring: 43 100% 60%; /* Dourado para ring de foco */
+  --input: 332 30% 18%; /* Rosa médio escuro para inputs */
+  --ring: 332 81% 65%; /* Rosa para ring de foco */
   
-  --chart-1: 43 100% 65%; /* Dourado mais brilhante */
-  --chart-2: 200 70% 65%; /* Azul mais brilhante */
-  --chart-3: 140 60% 60%; /* Verde mais brilhante */
-  --chart-4: 280 65% 70%; /* Roxo mais brilhante */
-  --chart-5: 35 80% 70%; /* Laranja mais brilhante */
+  --chart-1: 332 81% 65%; /* Rosa mais vibrante */
+  --chart-2: 311 65% 75%; /* Roxo suave mais brilhante */
+  --chart-3: 176 60% 60%; /* Verde água mais brilhante */
+  --chart-4: 25 80% 70%; /* Pêssego mais brilhante */
+  --chart-5: 340 75% 70%; /* Rosa choque mais brilhante */
 
   --shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.4);
   --shadow-xs: 0px 1px 3px 0px hsl(0 0% 0% / 0.5);
@@ -331,82 +331,82 @@
     inset: -1px;
   }
 
-  /* Classes personalizadas para o tema premium masculino */
+  /* Classes personalizadas para o tema premium feminino */
   .premium-button {
-    @apply rounded-xl px-6 py-3 font-semibold text-sm uppercase tracking-wider transition-all duration-300;
-    background: linear-gradient(135deg, #D4AF37 0%, #F0E68C 100%);
-    color: #000000;
-    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+    @apply rounded-2xl px-6 py-3 font-semibold text-sm uppercase tracking-wide transition-all duration-300;
+    background: linear-gradient(135deg, #DB7093 0%, #FFB6C1 100%);
+    color: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(219, 112, 147, 0.3);
     border: none;
   }
   
   .premium-button:hover {
-    background: linear-gradient(135deg, #000000 0%, #1C1C1C 100%);
-    color: #D4AF37;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+    background: linear-gradient(135deg, #FF69B4 0%, #FFC0CB 100%);
+    color: #FFFFFF;
+    box-shadow: 0 6px 16px rgba(255, 105, 180, 0.4);
     transform: translateY(-2px);
   }
   
   .premium-card {
-    @apply rounded-2xl overflow-hidden transition-all duration-300;
-    background-color: #F5F5F5;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    @apply rounded-3xl overflow-hidden transition-all duration-300;
+    background-color: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(219, 112, 147, 0.15);
+    border: 1px solid rgba(219, 112, 147, 0.1);
   }
   
   .premium-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    border-color: rgba(212, 175, 55, 0.3);
+    box-shadow: 0 8px 24px rgba(219, 112, 147, 0.2);
+    border-color: rgba(219, 112, 147, 0.3);
   }
   
   .premium-heading {
     @apply font-oswald font-bold uppercase tracking-wide;
-    color: #D4AF37;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    color: #DB7093;
+    text-shadow: 0 2px 4px rgba(219, 112, 147, 0.2);
   }
   
   .premium-text {
-    @apply font-roboto;
-    color: #F5F5F5;
+    @apply font-sans;
+    color: #5D4037;
   }
   
   .premium-section {
     @apply py-16 md:py-24;
-    background: linear-gradient(180deg, #000000 0%, #1C1C1C 100%);
+    background: linear-gradient(180deg, #FFF0F5 0%, #FFE4E1 100%);
   }
   
   .premium-section-light {
     @apply py-16 md:py-24;
-    background: linear-gradient(180deg, #F5F5F5 0%, #E0E0E0 100%);
+    background: linear-gradient(180deg, #FFFFFF 0%, #FFF8F7 100%);
   }
   
-  .gold-accent {
-    color: #D4AF37;
+  .pink-accent {
+    color: #DB7093;
   }
   
-  .gold-border {
-    border-color: #D4AF37;
+  .pink-border {
+    border-color: #DB7093;
   }
   
-  .black-bg {
-    background-color: #000000;
+  .pink-bg {
+    background-color: #FFF0F5;
   }
   
-  .dark-gray-bg {
-    background-color: #1C1C1C;
+  .light-pink-bg {
+    background-color: #FFE4E1;
   }
   
-  .ice-white-bg {
-    background-color: #F5F5F5;
+  .white-bg {
+    background-color: #FFFFFF;
   }
   
-  .gold-gradient {
-    background: linear-gradient(135deg, #D4AF37 0%, #F0E68C 100%);
+  .pink-gradient {
+    background: linear-gradient(135deg, #DB7093 0%, #FFB6C1 100%);
   }
   
-  .black-gradient {
-    background: linear-gradient(135deg, #000000 0%, #1C1C1C 100%);
+  .soft-pink-gradient {
+    background: linear-gradient(180deg, #FFF0F5 0%, #FFE4E1 100%);
   }
   
   /* Melhorias de responsividade para dispositivos móveis */
@@ -452,5 +452,72 @@
     .premium-card {
       @apply rounded-lg;
     }
+  }
+  
+  /* Feminine animations */
+  .feminine-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .feminine-pulse {
+    animation: pulse-soft 2s ease-in-out infinite;
+  }
+  
+  .shimmer-effect {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .shimmer-effect::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+    transform: translateX(-100%);
+    animation: shimmer 2s linear infinite;
+  }
+  
+  /* Soft transitions */
+  .feminine-transition {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  /* Hover effects with feminine touch */
+  .feminine-hover:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(219, 112, 147, 0.3);
+  }
+  
+  /* Button animations */
+  .feminine-button {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .feminine-button::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+  }
+  
+  .feminine-button:hover::before {
+    width: 300px;
+    height: 300px;
   }
 }

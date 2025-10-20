@@ -19,7 +19,7 @@ export default function Home() {
   const isLoading = productsLoading || kitsLoading;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen soft-pink-gradient">
       <Header />
       <main>
         <Hero />
