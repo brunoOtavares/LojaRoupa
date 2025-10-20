@@ -20,7 +20,7 @@ if (getApps().length === 0) {
       const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
       initializeApp({
         credential: cert(serviceAccount),
-        projectId: "layout-loja",
+        projectId: "michel-multimarcas",
       });
       console.log("Firebase Admin initialized with service account file");
     } else {
@@ -36,7 +36,7 @@ if (getApps().length === 0) {
           console.log("Successfully parsed service account key");
           initializeApp({
             credential: cert(serviceAccount),
-            projectId: "layout-loja",
+            projectId: "michel-multimarcas",
           });
           console.log("Firebase Admin initialized with service account from env");
         } catch (parseError) {
@@ -49,7 +49,7 @@ if (getApps().length === 0) {
           console.log("Successfully parsed service account key after fixing newlines");
           initializeApp({
             credential: cert(serviceAccount),
-            projectId: "layout-loja",
+            projectId: "michel-multimarcas",
           });
           console.log("Firebase Admin initialized with service account from env (fixed newlines)");
         }
@@ -58,7 +58,7 @@ if (getApps().length === 0) {
         console.warn("No Firebase service account key found in environment variables");
         console.log("Available environment variables:", Object.keys(process.env).filter(key => key.includes('FIREBASE')));
         initializeApp({
-          projectId: "layout-loja",
+          projectId: "michel-multimarcas",
         });
       }
     }
@@ -66,7 +66,7 @@ if (getApps().length === 0) {
     console.error("Error initializing Firebase Admin:", error);
     // Fallback to minimal config
     initializeApp({
-      projectId: "layout-loja",
+      projectId: "michel-multimarcas",
     });
   }
 }

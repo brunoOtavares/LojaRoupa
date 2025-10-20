@@ -24,7 +24,7 @@ if (getApps().length === 0) {
         console.log("Successfully parsed service account key");
         initializeApp({
           credential: cert(serviceAccount),
-          projectId: "layout-loja"
+          projectId: "michel-multimarcas"
         });
         firebaseInitialized = true;
         console.log("Firebase Admin initialized with service account from env");
@@ -37,7 +37,7 @@ if (getApps().length === 0) {
           console.log("Successfully parsed service account key after fixing newlines");
           initializeApp({
             credential: cert(serviceAccount),
-            projectId: "layout-loja"
+            projectId: "michel-multimarcas"
           });
           firebaseInitialized = true;
           console.log("Firebase Admin initialized with service account from env (fixed newlines)");
@@ -53,7 +53,7 @@ if (getApps().length === 0) {
         console.log("Found local serviceAccountKey.json file");
         initializeApp({
           credential: cert(serviceAccount),
-          projectId: "layout-loja"
+          projectId: "michel-multimarcas"
         });
         firebaseInitialized = true;
         console.log("Firebase Admin initialized with local service account file");
@@ -70,7 +70,7 @@ if (getApps().length === 0) {
         
         // Initialize without credentials for basic functionality
         initializeApp({
-          projectId: "layout-loja"
+          projectId: "michel-multimarcas"
         });
         console.log("Firebase Admin initialized with project ID only - LIMITED FUNCTIONALITY");
       }
@@ -81,7 +81,7 @@ if (getApps().length === 0) {
     
     // Initialize without credentials for basic functionality
     initializeApp({
-      projectId: "layout-loja"
+      projectId: "michel-multimarcas"
     });
     console.log("Firebase Admin initialized with project ID only as fallback - LIMITED FUNCTIONALITY");
   }
