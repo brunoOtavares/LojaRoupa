@@ -131,7 +131,19 @@ export function KitForm({ kit, onSubmit, onCancel, isPending }: KitFormProps) {
     setUploading(true);
     try {
       // Get ready for upload from backend
-      const token = await (await import("@/lib/firebase")).auth.currentUser?.getIdToken();
+      const { auth } = await import("@/lib/firebase");
+      const currentUser = auth.currentUser;
+      
+      if (!currentUser) {
+        throw new Error("User not authenticated. Please log in again.");
+      }
+      
+      const token = await currentUser.getIdToken();
+      
+      if (!token) {
+        throw new Error("Failed to get authentication token. Please try logging in again.");
+      }
+      
       const response = await fetch("/api/upload", {
         method: "POST",
         headers: {
@@ -142,6 +154,9 @@ export function KitForm({ kit, onSubmit, onCancel, isPending }: KitFormProps) {
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error("Authentication failed. Please log in again.");
+        }
         throw new Error("Failed to prepare for upload");
       }
 
@@ -165,6 +180,9 @@ export function KitForm({ kit, onSubmit, onCancel, isPending }: KitFormProps) {
       });
 
       if (!uploadResponse.ok) {
+        if (uploadResponse.status === 401) {
+          throw new Error("Authentication failed during upload. Please log in again.");
+        }
         const errorText = await uploadResponse.text();
         throw new Error(`Upload failed: ${uploadResponse.status} ${errorText}`);
       }
